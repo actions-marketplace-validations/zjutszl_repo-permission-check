@@ -1,0 +1,16 @@
+name: repo-permission-check
+author: zhili(zjutszl@gmail.com)
+description: action for permission check 
+inputs:
+  role:
+    description: 'Least permission user need to access target resource'
+    required: true
+  path:
+    description: '(optional) Check whether the target file has been changed when {path} is provided'
+    required: false
+outputs:
+  pass:
+    description: 'Indicate whether user has the right to proceed'
+runs:
+  using: 'node12'
+  main: 'index.js'
