@@ -63,31 +63,27 @@ actions_toolKit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit
 
         toolKit.outputs.pass = true
         toolKit.exit.success('Current Pull Request doesn\'t contain files match the rule.')
-        return false; // TODO: 确认下是否要删除？
       })
       .then(async matched => {
         // 检查PR发起者的权限
-        if (matched) { // TODO: 可能就不需要了
-            const octokit = new toolKit.github.Github(process.env.GITHUB_TOKEN)
-            const perms = ["none", "read", "write", "admin"];
-            const actorName = toolKit.github.context.actor;
-            const response = await octokit.repos.getCollaboratorPermissionLevel({
-              owner,
-              repo,
-              username: actorName
-            });
+        const perms = ["none", "read", "write", "admin"];
+        const actorName = toolKit.github.context.actor;
+        const response = await toolKit.github.repos.getCollaboratorPermissionLevel({
+          owner,
+          repo,
+          username: actorName
+        });
 
-            let permission = response.data.permission; // Permission level of actual user
-            let argPerm = toolKit.inputs.permission; // Permission level passed in through args
+        let permission = response.data.permission; // Permission level of actual user
+        let argPerm = toolKit.inputs.permission; // Permission level passed in through args
 
-            let yourPermIdx = perms.indexOf(permission);
-            let requiredPermIdx = perms.indexOf(argPerm);
+        let yourPermIdx = perms.indexOf(permission);
+        let requiredPermIdx = perms.indexOf(argPerm);
 
-            toolKit.log.debug(`[Action] User Permission: ${permission}`);
-            toolKit.log.debug(`[Action] Minimum Action Permission: ${argPerm}`);
+        toolKit.log.debug(`[Action] User Permission: ${permission}`);
+        toolKit.log.debug(`[Action] Minimum Action Permission: ${argPerm}`);
 
-            toolKit.outputs.pass = yourPermIdx >= requiredPermIdx
-        }
+        toolKit.outputs.pass = yourPermIdx >= requiredPermIdx
       })
       .catch(reason => {
         toolKit.outputs.pass = false
