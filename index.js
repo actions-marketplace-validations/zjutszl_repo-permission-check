@@ -39,10 +39,10 @@ Toolkit.run(async function (toolKit) {
   if (!process.env.GITHUB_EVENT_PATH) {
     toolkit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
   } else {
-    const { owner, issue_number, repo }: IssuesListLabelsOnIssueParams = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolkit.log, toolkit.exit);
-    const { pulls: { listFiles }, issues }: GitHub = toolkit.github;
+    const { owner, issue_number, repo } = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolkit.log, toolkit.exit);
+    const { pulls: { listFiles }, issues } = toolkit.github;
 
-    const params: PullsListFilesParams = {owner, pull_number: issue_number, repo};
+    const params = {owner, pull_number, repo};
 
     await fetchAllFiles(listFiles, toolkit.log, params, 100, 1)
       .then(files => {
@@ -63,7 +63,7 @@ Toolkit.run(async function (toolKit) {
         toolkit.exit.success('Current Pull Request doesn\'t contain files match the rule.')
         return false; // TODO: 确认下是否要删除？
       })
-      .then(matched => {
+      .then(async matched => {
         // 检查PR发起者的权限
         if (matched) { // TODO: 可能就不需要了
             const perms = ["none", "read", "write", "admin"];
