@@ -48,7 +48,7 @@ Toolkit.run(async function (toolKit) {
       .then(async matched => {
         // 检查PR发起者的权限
         const perms = ["none", "read", "write", "admin"];
-        const actorName = toolKit.github.context.actor;
+        const actorName = toolKit.context.actor;
         const response = await toolKit.github.repos.getCollaboratorPermissionLevel({
           owner,
           repo,
