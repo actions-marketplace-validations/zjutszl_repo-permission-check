@@ -18,7 +18,7 @@ Toolkit.run(async function (toolKit) {
   const patterns = toolKit.inputs.files.split('\n');
   toolKit.log.info("patterns: ", patterns);
   toolKit.log.debug(`[Action] event: ${toolKit.context.event}`);
-  if (/pull_request/.test(toolKit.context.event)) {
+  if (!/pull_request/.test(toolKit.context.event)) {
     toolKit.outputs.pass = true
     toolKit.exit.success('Not a Pull Request, ignore');
   }
