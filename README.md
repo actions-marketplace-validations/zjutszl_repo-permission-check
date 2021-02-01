@@ -1,4 +1,4 @@
-# repo permission check
+# repo-permission-check
 
 This action check actor's permission in current repo.
 
@@ -8,17 +8,15 @@ This action check actor's permission in current repo.
 
 **Required** The least permission user need to proceed.
 
-### `path`
+### `files`
 
-if path provided, check whether target file is changed within current commits.
-if not, check only the permission of this repo.
+**Required** check whether target files is changed within current commits.
 
 ## Outputs
 
-### `authorized`
+### `pass`
 
 (boolean) The result of permission check.
-
 
 ## Example usage
 
@@ -26,5 +24,6 @@ if not, check only the permission of this repo.
 uses: actions/repo-permission-check@v1
 with:
   role: 'write'
-  path: './.github/.workflow/**'
+  files: |
+    ya?ml$
 ```
