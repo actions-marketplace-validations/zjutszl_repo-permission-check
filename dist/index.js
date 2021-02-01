@@ -30,8 +30,8 @@ module.exports = webpackEmptyContext;
 
 "use strict";
 __nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var actions_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7597);
-/* harmony import */ var actions_toolkit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(actions_toolkit__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var actions_toolKit__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6004);
+/* harmony import */ var actions_toolKit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(actions_toolKit__WEBPACK_IMPORTED_MODULE_0__);
 
 
 const findRepositoryInformation = (gitHubEventPath, log, exit) => {
@@ -62,19 +62,19 @@ const fetchAllFiles = (listFiles, log, params, per_page, page) => {
 };
 
 
-actions_toolkit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit) {
-  const patterns = toolkit.inputs.files;
-  toolkit.log.info(" files to check: ", patterns);
+actions_toolKit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit) {
+  const patterns = toolKit.inputs.files;
+  toolKit.log.info(" files to check: ", patterns);
 
   if (!process.env.GITHUB_EVENT_PATH) {
-    toolkit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
+    toolKit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
   } else {
-    const { owner, issue_number, repo } = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolkit.log, toolkit.exit);
-    const { pulls: { listFiles }, issues } = toolkit.github;
+    const { owner, issue_number, repo } = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolKit.log, toolKit.exit);
+    const { pulls: { listFiles }, issues } = toolKit.github;
 
     const params = {owner, pull_number, repo};
 
-    await fetchAllFiles(listFiles, toolkit.log, params, 100, 1)
+    await fetchAllFiles(listFiles, toolKit.log, params, 100, 1)
       .then(files => {
         // 改动文件是否命中规则？
         let matchedFiles = [];
@@ -89,8 +89,8 @@ actions_toolkit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit
         toolKit.log.debug("matched files: ", matchedFiles);
         if (matchedFiles.length > 0) return true;
 
-        toolkit.outputs.pass = true
-        toolkit.exit.success('Current Pull Request doesn\'t contain files match the rule.')
+        toolKit.outputs.pass = true
+        toolKit.exit.success('Current Pull Request doesn\'t contain files match the rule.')
         return false; // TODO: 确认下是否要删除？
       })
       .then(async matched => {
@@ -106,22 +106,22 @@ actions_toolkit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit
             });
 
             let permission = response.data.permission; // Permission level of actual user
-            let argPerm = toolkit.inputs.permission; // Permission level passed in through args
+            let argPerm = toolKit.inputs.permission; // Permission level passed in through args
 
             let yourPermIdx = perms.indexOf(permission);
             let requiredPermIdx = perms.indexOf(argPerm);
 
-            toolkit.log.debug(`[Action] User Permission: ${permission}`);
-            toolkit.log.debug(`[Action] Minimum Action Permission: ${argPerm}`);
+            toolKit.log.debug(`[Action] User Permission: ${permission}`);
+            toolKit.log.debug(`[Action] Minimum Action Permission: ${argPerm}`);
 
-            toolkit.outputs.pass = yourPermIdx >= requiredPermIdx
+            toolKit.outputs.pass = yourPermIdx >= requiredPermIdx
         }
       })
       .catch(reason => {
-        toolkit.outputs.pass = false
-        toolkit.exit.failure(reason)
+        toolKit.outputs.pass = false
+        toolKit.exit.failure(reason)
       })
-    toolkit.exit.success('check finished!')
+    toolKit.exit.success('check finished!')
   }
 })
 
@@ -4643,7 +4643,7 @@ exports.getUserAgent = getUserAgent;
 
 /***/ }),
 
-/***/ 5280:
+/***/ 4281:
 /***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
@@ -4735,7 +4735,7 @@ exports.Context = Context;
 
 /***/ }),
 
-/***/ 2666:
+/***/ 4899:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4789,7 +4789,7 @@ exports.Exit = Exit;
 
 /***/ }),
 
-/***/ 8208:
+/***/ 8811:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4817,7 +4817,7 @@ exports.getBody = getBody;
 
 /***/ }),
 
-/***/ 7597:
+/***/ 6004:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4889,11 +4889,11 @@ var minimist_1 = __importDefault(__nccwpck_require__(4060));
 var path_1 = __importDefault(__nccwpck_require__(5622));
 var signale_1 = __nccwpck_require__(846);
 var rest_1 = __nccwpck_require__(7276);
-var context_1 = __nccwpck_require__(5280);
-var exit_1 = __nccwpck_require__(2666);
-var get_body_1 = __nccwpck_require__(8208);
-var inputs_1 = __nccwpck_require__(4550);
-var outputs_1 = __nccwpck_require__(745);
+var context_1 = __nccwpck_require__(4281);
+var exit_1 = __nccwpck_require__(4899);
+var get_body_1 = __nccwpck_require__(8811);
+var inputs_1 = __nccwpck_require__(3731);
+var outputs_1 = __nccwpck_require__(2850);
 var Toolkit = /** @class */ (function () {
     function Toolkit(opts) {
         if (opts === void 0) { opts = {}; }
@@ -5129,7 +5129,7 @@ exports.Toolkit = Toolkit;
 
 /***/ }),
 
-/***/ 4550:
+/***/ 3731:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -5184,7 +5184,7 @@ exports.createInputProxy = createInputProxy;
 
 /***/ }),
 
-/***/ 745:
+/***/ 2850:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";

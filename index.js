@@ -1,4 +1,4 @@
-import {Toolkit, ToolkitOptions} from 'actions-toolkit';
+import {Toolkit, ToolkitOptions} from 'actions-toolKit';
 
 const findRepositoryInformation = (gitHubEventPath, log, exit) => {
   const payload = require(gitHubEventPath);
@@ -29,18 +29,18 @@ const fetchAllFiles = (listFiles, log, params, per_page, page) => {
 
 
 Toolkit.run(async function (toolKit) {
-  const patterns = toolkit.inputs.files;
-  toolkit.log.info(" files to check: ", patterns);
+  const patterns = toolKit.inputs.files;
+  toolKit.log.info(" files to check: ", patterns);
 
   if (!process.env.GITHUB_EVENT_PATH) {
-    toolkit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
+    toolKit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
   } else {
-    const { owner, issue_number, repo } = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolkit.log, toolkit.exit);
-    const { pulls: { listFiles }, issues } = toolkit.github;
+    const { owner, issue_number, repo } = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolKit.log, toolKit.exit);
+    const { pulls: { listFiles }, issues } = toolKit.github;
 
     const params = {owner, pull_number, repo};
 
-    await fetchAllFiles(listFiles, toolkit.log, params, 100, 1)
+    await fetchAllFiles(listFiles, toolKit.log, params, 100, 1)
       .then(files => {
         // 改动文件是否命中规则？
         let matchedFiles = [];
@@ -55,8 +55,8 @@ Toolkit.run(async function (toolKit) {
         toolKit.log.debug("matched files: ", matchedFiles);
         if (matchedFiles.length > 0) return true;
 
-        toolkit.outputs.pass = true
-        toolkit.exit.success('Current Pull Request doesn\'t contain files match the rule.')
+        toolKit.outputs.pass = true
+        toolKit.exit.success('Current Pull Request doesn\'t contain files match the rule.')
         return false; // TODO: 确认下是否要删除？
       })
       .then(async matched => {
@@ -72,21 +72,21 @@ Toolkit.run(async function (toolKit) {
             });
 
             let permission = response.data.permission; // Permission level of actual user
-            let argPerm = toolkit.inputs.permission; // Permission level passed in through args
+            let argPerm = toolKit.inputs.permission; // Permission level passed in through args
 
             let yourPermIdx = perms.indexOf(permission);
             let requiredPermIdx = perms.indexOf(argPerm);
 
-            toolkit.log.debug(`[Action] User Permission: ${permission}`);
-            toolkit.log.debug(`[Action] Minimum Action Permission: ${argPerm}`);
+            toolKit.log.debug(`[Action] User Permission: ${permission}`);
+            toolKit.log.debug(`[Action] Minimum Action Permission: ${argPerm}`);
 
-            toolkit.outputs.pass = yourPermIdx >= requiredPermIdx
+            toolKit.outputs.pass = yourPermIdx >= requiredPermIdx
         }
       })
       .catch(reason => {
-        toolkit.outputs.pass = false
-        toolkit.exit.failure(reason)
+        toolKit.outputs.pass = false
+        toolKit.exit.failure(reason)
       })
-    toolkit.exit.success('check finished!')
+    toolKit.exit.success('check finished!')
   }
 })
