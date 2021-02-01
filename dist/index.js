@@ -41,7 +41,7 @@ actions_toolKit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit
   if (!process.env.GITHUB_EVENT_PATH) {
     toolKit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
   } else {
-    const { owner, issue_number, repo } = toolKit.context.pullRequest
+    const { owner, pull_number, repo } = toolKit.context.pullRequest
     const { pulls: { listFiles } } = toolKit.github;
 
     const params = {owner, pull_number, repo};
