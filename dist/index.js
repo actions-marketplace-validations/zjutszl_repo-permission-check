@@ -35,7 +35,13 @@ const fetchAllFiles = (listFiles, log, params, per_page, page) => {
 
 
 actions_toolKit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit) {
-  const patterns = toolKit.inputs.files;
+  let patterns;
+  if (Array.isArray(toolKit.inputs.files)) {
+    patterns = toolKit.inputs.files;
+  } else {
+    patterns = [toolKit.inputs.files]
+  }
+  toolKit.log.info(" typeof patterns: ", typeof patterns);
   toolKit.log.info(" files to check: ", patterns);
 
   if (!process.env.GITHUB_EVENT_PATH) {
