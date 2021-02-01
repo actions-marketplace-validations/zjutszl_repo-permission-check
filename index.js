@@ -1,18 +1,5 @@
 import {Toolkit, ToolkitOptions} from 'actions-toolKit';
 
-const findRepositoryInformation = (gitHubEventPath, log, exit) => {
-  const payload = require(gitHubEventPath);
-  if (payload.number === undefined) {
-    exit.neutral('Action not triggered by a PullRequest action. PR ID is missing')
-  }
-  log.info(`Checking files list for PR#${payload.number}`);
-  return {
-    issue_number: payload.number,
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name
-  };
-};
-
 
 const fetchAllFiles = (listFiles, log, params, per_page, page) => {
   log.info(`Listing files (page: ${page} | per_page: ${per_page})...`);
@@ -35,8 +22,8 @@ Toolkit.run(async function (toolKit) {
   if (!process.env.GITHUB_EVENT_PATH) {
     toolKit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
   } else {
-    const { owner, issue_number, repo } = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolKit.log, toolKit.exit);
-    const { pulls: { listFiles }, issues } = toolKit.github;
+    const { owner, issue_number, repo } = toolKit.context.pullRequest
+    const { pulls: { listFiles } } = toolKit.github;
 
     const params = {owner, pull_number, repo};
 
