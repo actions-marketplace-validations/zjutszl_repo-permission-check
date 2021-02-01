@@ -10,21 +10,6 @@ module.exports = JSON.parse("{\"_from\":\"signale@^1.4.0\",\"_id\":\"signale@1.4
 
 /***/ }),
 
-/***/ 6544:
-/***/ ((module) => {
-
-function webpackEmptyContext(req) {
-	var e = new Error("Cannot find module '" + req + "'");
-	e.code = 'MODULE_NOT_FOUND';
-	throw e;
-}
-webpackEmptyContext.keys = () => [];
-webpackEmptyContext.resolve = webpackEmptyContext;
-webpackEmptyContext.id = 6544;
-module.exports = webpackEmptyContext;
-
-/***/ }),
-
 /***/ 6238:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
@@ -33,19 +18,6 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var actions_toolKit__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6004);
 /* harmony import */ var actions_toolKit__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(actions_toolKit__WEBPACK_IMPORTED_MODULE_0__);
 
-
-const findRepositoryInformation = (gitHubEventPath, log, exit) => {
-  const payload = __nccwpck_require__(6544)(gitHubEventPath);
-  if (payload.number === undefined) {
-    exit.neutral('Action not triggered by a PullRequest action. PR ID is missing')
-  }
-  log.info(`Checking files list for PR#${payload.number}`);
-  return {
-    issue_number: payload.number,
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name
-  };
-};
 
 
 const fetchAllFiles = (listFiles, log, params, per_page, page) => {
@@ -69,8 +41,8 @@ actions_toolKit__WEBPACK_IMPORTED_MODULE_0__.Toolkit.run(async function (toolKit
   if (!process.env.GITHUB_EVENT_PATH) {
     toolKit.exit.failure('Process env GITHUB_EVENT_PATH is undefined');
   } else {
-    const { owner, issue_number, repo } = findRepositoryInformation(process.env.GITHUB_EVENT_PATH, toolKit.log, toolKit.exit);
-    const { pulls: { listFiles }, issues } = toolKit.github;
+    const { owner, issue_number, repo } = toolKit.context.pullRequest
+    const { pulls: { listFiles } } = toolKit.github;
 
     const params = {owner, pull_number, repo};
 
