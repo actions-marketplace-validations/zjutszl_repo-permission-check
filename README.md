@@ -4,7 +4,7 @@ This action check actor's permission in current repo.
 
 ## Inputs
 
-### `role`
+### `permission`
 
 **Required** The least permission user need to proceed.
 
